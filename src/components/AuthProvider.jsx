@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "firebase/auth";
+import { useCookies } from "react-cookie";
 import { getFirebaseInstance } from "../services/firebase/firebase";
 
 // start initializing the context - empty object
@@ -9,6 +10,7 @@ export const AuthContext = React.createContext({});
 export default function AuthProvider({ children }) {
   const firebase = getFirebaseInstance();
 
+  const [cookies, setCookie, removeCookie] = useCookies(["auth_token"]);
   const [isLoading, setIsLoading] = useState(true);
   const [token, setToken] = useState(null);
   const [authUser, setAuthUser] = useState(null);
@@ -21,8 +23,10 @@ export default function AuthProvider({ children }) {
 
       const tokenResp = await registerResp.user.getIdToken();
       setToken(tokenResp);
+      setCookie("auth_token", tokenResp, { path: "/", maxAge: 7200 });
     } catch (err) {
       setToken(null);
+      removeCookie("auth_token");
       return false;
     }
 
