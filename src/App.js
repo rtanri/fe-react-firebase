@@ -27,12 +27,12 @@ function App() {
           <Router>
             <div className="App">
               <Switch>
+                <PrivateRoute path="/dashboard" component={Dashboard} />
                 <GuestOnlyRoute path="/register" component={RegisterPage} />
                 <GuestOnlyRoute path="/login" component={LoginPage} />
-                <Route path="/dashboard" component={Dashboard} />
 
                 <Route path="/">
-                  <Redirect to="/dashboard" component={Dashboard} />
+                  <Redirect to="/login" component={LoginPage} />
                 </Route>
               </Switch>
             </div>
