@@ -1,12 +1,26 @@
 import { Row, Col, Input, Button } from "antd";
 import { useState } from "react";
+import "firebase/auth";
+import { getFirebaseInstance } from "../services/firebase/firebase";
 
 function RegisterPage(props) {
+  const firebase = getFirebaseInstance();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = e => {
-    console.log(e);
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(resp => {
+        console.log(resp);
+        // var user = resp.user;
+      })
+      .catch(err => {
+        console.log(err);
+        // var errorCode = err.code;
+        // var errorMessage = err.message;
+      });
   };
 
   const handleInputChange = e => {
@@ -44,7 +58,9 @@ function RegisterPage(props) {
               />
             </div>
 
-            <Button type={"primary"}>Register</Button>
+            <Button type={"primary"} onClick={handleSubmit}>
+              Register
+            </Button>
           </form>
         </Col>
       </Row>
