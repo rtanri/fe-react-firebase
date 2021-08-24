@@ -11,6 +11,10 @@ import GuestOnlyRoute from "./components/GuestOnlyRoute";
 
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import { getFirebaseInstance } from "./services/firebase/firebase";
+
+// init firebase instance
+getFirebaseInstance();
 
 function App() {
   return (
