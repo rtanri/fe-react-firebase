@@ -11,6 +11,7 @@ import GuestOnlyRoute from "./components/GuestOnlyRoute";
 
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import Dashboard from "./pages/Dashboard";
 import { getFirebaseInstance } from "./services/firebase/firebase";
 
 // init firebase instance
@@ -24,9 +25,10 @@ function App() {
           <Switch>
             <GuestOnlyRoute path="/register" component={RegisterPage} />
             <GuestOnlyRoute path="/login" component={LoginPage} />
+            <Route path="/dashboard" component={Dashboard} />
 
             <Route path="/">
-              <Redirect to="/login" />
+              <Redirect to="/dashboard" component={Dashboard} />
             </Route>
           </Switch>
         </div>

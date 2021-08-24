@@ -1,26 +1,32 @@
-import { Row, Col, Input, Button } from "antd";
-import { useState } from "react";
-import "firebase/auth";
-import { getFirebaseInstance } from "../services/firebase/firebase";
+import { Row, Col, Input, Button, notification } from "antd";
+import { useState, useContext } from "react";
+import { AuthContext } from "../components/AuthProvider";
 
 function RegisterPage(props) {
-  const firebase = getFirebaseInstance();
+  // useContext hook will accept AuthProvider, and extract all values inside AuthContext to be used
+  const auth = useContext(AuthContext);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isRegistering, setIsRegistering] = useState(false); //to prevent double click on submit btn
 
-  const handleSubmit = e => {
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then(resp => {
-        console.log(resp);
-        // var user = resp.user;
-      })
-      .catch(err => {
-        console.log(err);
-        // var errorCode = err.code;
-        // var errorMessage = err.message;
+  const handleSubmit = async e => {
+    setIsRegistering(true);
+
+    let registerSuccess = await auth.register(email, password);
+
+    if (registerSuccess) {
+      notification.open({
+        message: "Registration Success",
+        placement: "bottomRight",
       });
+    } else {
+      notification.open({
+        message: "Registration Failed",
+        placement: "bottomRight",
+      });
+    }
+    setIsRegistering(false);
   };
 
   const handleInputChange = e => {
@@ -58,7 +64,12 @@ function RegisterPage(props) {
               />
             </div>
 
-            <Button type={"primary"} onClick={handleSubmit}>
+            <Button
+              type={"primary"}
+              onClick={handleSubmit}
+              loading={isRegistering} // submit btn clicked,
+              disabled={isRegistering} // it will be loading + disabled
+            >
               Register
             </Button>
           </form>
