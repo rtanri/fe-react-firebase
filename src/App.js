@@ -1,4 +1,5 @@
 import "./App.css";
+
 import {
   BrowserRouter as Router,
   Switch,
@@ -8,6 +9,7 @@ import {
 import { CookiesProvider } from "react-cookie";
 import AuthProvider from "./components/AuthProvider";
 
+import SiteHeader from "./components/SiteHeader";
 import PrivateRoute from "./components/PrivateRoute";
 import GuestOnlyRoute from "./components/GuestOnlyRoute";
 
@@ -26,6 +28,7 @@ function App() {
         <AuthProvider>
           <Router>
             <div className="App">
+              <SiteHeader />
               <Switch>
                 <PrivateRoute path="/dashboard" component={Dashboard} />
                 <GuestOnlyRoute path="/register" component={RegisterPage} />

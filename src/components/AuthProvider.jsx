@@ -8,6 +8,7 @@ export const AuthContext = React.createContext({});
 
 // to prep states before transfering to all componentns
 export default function AuthProvider({ children }) {
+  const AuthTokenCookieName = "auth_token";
   const firebase = getFirebaseInstance();
 
   const [cookies, setCookie, removeCookie] = useCookies(["auth_token"]);
@@ -29,11 +30,11 @@ export default function AuthProvider({ children }) {
 
       const tokenResp = await registerResp.user.getIdToken();
       setToken(tokenResp);
-      setCookie("auth_token", tokenResp, { path: "/", maxAge: 7200 });
+      setCookie(AuthTokenCookieName, tokenResp, { path: "/", maxAge: 7200 });
       // setIsLoading(false);
     } catch (err) {
       setToken(null);
-      removeCookie("auth_token");
+      removeCookie(AuthTokenCookieName);
       return false;
     }
 
@@ -43,7 +44,8 @@ export default function AuthProvider({ children }) {
   const login = async (email, password) => {};
 
   const logout = () => {
-    setIsLoading(false);
+    setToken(null);
+    removeCookie(AuthTokenCookieName);
   };
 
   return (
