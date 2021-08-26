@@ -41,7 +41,21 @@ export default function AuthProvider({ children }) {
     return true;
   };
 
-  const login = async (email, password) => {};
+  const login = async (email, password) => {
+    try {
+      const loginResp = await firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password);
+      const userToken = await loginResp.user.getIdToken();
+
+      setToken(userToken);
+      setAuthUser(loginResp.user.toJSON());
+
+      return true;
+    } catch (err) {
+      return false;
+    }
+  };
 
   const logout = () => {
     setToken(null);

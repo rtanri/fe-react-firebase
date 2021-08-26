@@ -1,10 +1,20 @@
 import { useContext } from "react";
 import { Menu, Button } from "antd";
+import { useHistory } from 'react-router-dom';
 import { MailOutlined, AppstoreOutlined } from "@ant-design/icons";
 import { AuthContext } from "./AuthProvider";
 
 function SiteHeader() {
   const auth = useContext(AuthContext);
+  const history = useHistory()
+
+  const redirectToLogin = () => {
+        history.push('/login')
+  };
+
+  const redirectToRegister=() => {
+      history.push('/register')
+  }
 
   return (
     <header className="site0header">
@@ -24,13 +34,13 @@ function SiteHeader() {
       ):
       <>
             <Menu.Item key="login">
-            <Button type="primary" onClick={auth.login}>
+            <Button type="primary" onClick={redirectToLogin}>
                   Login
             </Button>
             </Menu.Item>
 
             <Menu.Item key="register">
-            <Button type="secondary" onClick={auth.register}>
+            <Button type="secondary" onClick={redirectToRegister}>
                   Register
             </Button>
             </Menu.Item>
