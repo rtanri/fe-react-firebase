@@ -17,6 +17,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import Dashboard from "./pages/Dashboard";
 import SubmitProposalPage from "./pages/SubmitProposalPage";
+import ProposalPage from "./pages/ProposalPage";
 import { getFirebaseInstance } from "./services/firebase/firebase";
 
 // init firebase instance
@@ -34,6 +35,10 @@ function App() {
                 <PrivateRoute
                   path="/submit-proposal"
                   component={SubmitProposalPage}
+                />
+                <PrivateRoute
+                  path="/proposal"
+                  component={ProposalPage}
                 />
                 <PrivateRoute path="/dashboard" component={Dashboard} />
                 <GuestOnlyRoute path="/register" component={RegisterPage} />

@@ -1,7 +1,13 @@
 import { useState } from "react";
-import { Button, Form, Input, Tag, Tooltip } from "antd";
+import { Button, Form, Input } from "antd";
+import 'firebase/firestore'
+import { getFirebaseInstance } from "../services/firebase/firebase";
 
 function SubmitProposalPage(props) {
+
+const firebase = getFirebaseInstance()
+const firestore = firebase.firestore()
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const onFinish = values => {
@@ -14,8 +20,19 @@ function SubmitProposalPage(props) {
                   return artist.trim()
             })
       }
-      console.log(artistsArr)
-      setIsSubmitting (false)
+
+      values.artists = artistsArr
+
+      firestore.collection('proposals').add(values)
+            .then(doc => {
+                  console.log(doc)
+            })
+            .catch(err => {
+                  console.log(err)
+            })
+            .finally(()=> {
+                  setIsSubmitting (false)
+            })
       };
 
   return (

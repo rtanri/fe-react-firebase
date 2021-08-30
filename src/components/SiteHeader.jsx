@@ -19,8 +19,11 @@ function SiteHeader() {
   return (
     <header className="site0header">
       <Menu mode="horizontal">
-        <Menu.Item key="mail" icon={<MailOutlined />}>
+        <Menu.Item key="submit-proposal" icon={<MailOutlined />}>
           <Link to="/submit-proposal">Submit Proposal</Link>
+        </Menu.Item>
+        <Menu.Item key="proposal">
+          <Link to="/proposal">My Proposal</Link>
         </Menu.Item>
         <Menu.Item key="app" disabled icon={<AppstoreOutlined />}>
           Navigation Two

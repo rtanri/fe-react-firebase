@@ -25,14 +25,6 @@ function LoginPage(props) {
     setIsLoggingIn(false);
   };
 
-  // customer validator
-  const emailValidator = (rule, value, callback) => {
-    try {
-      throw new Error("Please provide a valid email");
-    } catch (err) {
-      callback(err);
-    }
-  };
 
   return (
     <div className="page-login container">
