@@ -1,39 +1,42 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Button, Form, Input } from "antd";
-import 'firebase/firestore'
+import "firebase/firestore";
 import { getFirebaseInstance } from "../services/firebase/firebase";
+import { AuthContext } from "../components/AuthProvider";
 
 function SubmitProposalPage(props) {
-
-const firebase = getFirebaseInstance()
-const firestore = firebase.firestore()
+  const firebase = getFirebaseInstance();
+  const firestore = firebase.firestore();
+  const auth = useContext(AuthContext);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const onFinish = values => {
-        setIsSubmitting(true)
-      const artistVal = values.artists
-      let artistsArr = []
-      if (artistVal){
-            const artistsValArr = artistVal.split(",")
-            artistsArr = artistsValArr.map(artist => {
-                  return artist.trim()
-            })
-      }
+    setIsSubmitting(true);
+    const artistVal = values.artists;
+    let artistsArr = [];
+    if (artistVal) {
+      const artistsValArr = artistVal.split(",");
+      artistsArr = artistsValArr.map(artist => {
+        return artist.trim();
+      });
+    }
 
-      values.artists = artistsArr
+    values.artists = artistsArr;
 
-      firestore.collection('proposals').add(values)
-            .then(doc => {
-                  console.log(doc)
-            })
-            .catch(err => {
-                  console.log(err)
-            })
-            .finally(()=> {
-                  setIsSubmitting (false)
-            })
-      };
+    firestore
+      .collection("proposals")
+      .add({ ...values, user_id: auth.authUserID })
+      .then(doc => {
+        console.log(doc);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
+  };
 
   return (
     <div className="submit-page-proposal container">
@@ -82,13 +85,10 @@ const firestore = firebase.firestore()
           <Form.Item
             label="Artist"
             name="artists"
-            rules={[
-              { required: true, message: "Please enter artists" },
-            ]}
+            rules={[{ required: true, message: "Please enter artists" }]}
           >
             <Input />
           </Form.Item>
-
 
           <Form.Item>
             <Button
