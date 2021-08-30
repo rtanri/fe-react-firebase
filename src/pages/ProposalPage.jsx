@@ -1,34 +1,56 @@
-import { useState, useEffect } from "react";
-import { Redirect } from 'react-router-dom'
+import { useState, useEffect, useContext } from "react";
+import { Redirect } from "react-router-dom";
 import { Button, Form, Input } from "antd";
-import 'firebase/firestore'
+import "firebase/firestore";
 import { getFirebaseInstance } from "../services/firebase/firebase";
+import { AuthContext } from "../components/AuthProvider";
 
 function ProposalPage(props) {
+  const firebase = getFirebaseInstance();
+  const firestore = firebase.firestore();
+  const auth = useContext(AuthContext);
 
-const firebase = getFirebaseInstance()
-const firestore = firebase.firestore()
+  // set isLoading to true bcos when we want to load this page we need to have some time to load data
+  const [proposalDoc, setProposalDoc] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-// set isLoading to true bcos when we want to load this page we need to have some time to load data
-const [proposalDoc, setProposalDoc] = useState(null);
-const [isLoading, setIsLoading] = useState(true);
-
-// useEffect (()=> {
-//       firestore.collection('proposal').where()
-// })
+  // fetch proposal where UserID is CurrentUser-ID
+  useEffect(() => {
+    setIsLoading(true);
+    firestore
+      .collection("proposals")
+      .where("user_id", "==", auth.authUserID)
+      .get() // get is the promise to give 'doc' data
+      .then(docResp => {
+        if (!docResp.empty) {
+          setProposalDoc(docResp.docs[0].data());
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [firestore, auth.authUserID]);
 
   return (
-            <div className="page-proposal container">
-            { isLoading && proposalDoc ? (
-                  <div style={{width:'100px', maxWidth:'500px', margin:'30px auto 0 auto'}}>
-                        Proposal page
-                  </div>                
-            ):(
-                  <Redirect to='/submit-proposal' />
-            )}
-
-            </div>
-      ) 
+    <div className="page-proposal container">
+      {!isLoading && proposalDoc ? (
+        <div
+          style={{
+            width: "100px",
+            maxWidth: "500px",
+            margin: "30px auto 0 auto",
+          }}
+        >
+          Proposal page
+        </div>
+      ) : (
+        <Redirect to="/submit-proposal" />
+      )}
+    </div>
+  );
 }
 
 export default ProposalPage;

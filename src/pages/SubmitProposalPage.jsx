@@ -1,4 +1,5 @@
 import { useState, useContext } from "react";
+import { useHistory } from "react-router-dom";
 import { Button, Form, Input } from "antd";
 import "firebase/firestore";
 import { getFirebaseInstance } from "../services/firebase/firebase";
@@ -8,6 +9,7 @@ function SubmitProposalPage(props) {
   const firebase = getFirebaseInstance();
   const firestore = firebase.firestore();
   const auth = useContext(AuthContext);
+  const history = useHistory();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -28,7 +30,7 @@ function SubmitProposalPage(props) {
       .collection("proposals")
       .add({ ...values, user_id: auth.authUserID })
       .then(doc => {
-        console.log(doc);
+        history.push("/proposal");
       })
       .catch(err => {
         console.log(err);
