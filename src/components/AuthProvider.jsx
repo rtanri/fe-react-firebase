@@ -31,7 +31,6 @@ export default function AuthProvider({ children }) {
       const tokenResp = await registerResp.user.getIdToken();
       setToken(tokenResp);
       setCookie(AuthTokenCookieName, tokenResp, { path: "/", maxAge: 7200 });
-      // setIsLoading(false);
     } catch (err) {
       setToken(null);
       removeCookie(AuthTokenCookieName);
@@ -46,10 +45,14 @@ export default function AuthProvider({ children }) {
       const loginResp = await firebase
         .auth()
         .signInWithEmailAndPassword(email, password);
+      console.log("loginResp");
       const userToken = await loginResp.user.getIdToken();
+      console.log("userToken");
+      console.log(userToken);
 
       setToken(userToken);
       setAuthUser(loginResp.user.toJSON());
+      setCookie(AuthTokenCookieName, userToken, { path: "/", maxAge: 7200 });
 
       return true;
     } catch (err) {

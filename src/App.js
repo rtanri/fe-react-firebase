@@ -16,6 +16,7 @@ import GuestOnlyRoute from "./components/GuestOnlyRoute";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import Dashboard from "./pages/Dashboard";
+import SubmitProposalPage from "./pages/SubmitProposalPage";
 import { getFirebaseInstance } from "./services/firebase/firebase";
 
 // init firebase instance
@@ -30,6 +31,10 @@ function App() {
             <div className="App">
               <SiteHeader />
               <Switch>
+                <PrivateRoute
+                  path="/submit-proposal"
+                  component={SubmitProposalPage}
+                />
                 <PrivateRoute path="/dashboard" component={Dashboard} />
                 <GuestOnlyRoute path="/register" component={RegisterPage} />
                 <GuestOnlyRoute path="/login" component={LoginPage} />
