@@ -1,6 +1,6 @@
-import { useState, useContext } from "react";
-import { useHistory } from "react-router-dom";
-import { Button, Form, Input } from "antd";
+import { useState, useContext, useEffect } from "react";
+import { useHistory, Redirect } from "react-router-dom";
+import { Button, Form, Input, Skeleton } from "antd";
 import "firebase/firestore";
 import { getFirebaseInstance } from "../services/firebase/firebase";
 import { AuthContext } from "../components/AuthProvider";
@@ -11,7 +11,29 @@ function SubmitProposalPage(props) {
   const auth = useContext(AuthContext);
   const history = useHistory();
 
+  const [proposalDoc, setProposalDoc] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const  [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    setIsLoading(true);
+    firestore
+      .collection("proposals")
+      .where("user_id", "==", auth.authUserID)
+      .get() 
+      .then(docResp => {
+        if (!docResp.empty) {
+          setProposalDoc(docResp.docs[0].data());
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [firestore, auth.authUserID]);
+
 
   const onFinish = values => {
     setIsSubmitting(true);
@@ -40,7 +62,19 @@ function SubmitProposalPage(props) {
       });
   };
 
+  if (isLoading) {
+    return (<Skeleton active={ true } /> )
+  }
+
+  if (proposalDoc) {
+    return (
+      <Redirect to='/proposal' />
+    )
+  }
+
+
   return (
+    
     <div className="submit-page-proposal container">
       <div
         style={{
