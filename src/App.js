@@ -25,7 +25,7 @@ import ProposalPage from "./pages/ProposalPage";
 
 // init firebase instance
 getFirebaseInstance();
-const stripePromise = loadStripe('pk_live_51JV3iNClfg6uxQbCi4dfHITzrkp50ATB3OQ4K5QFOq0QgloAhmJVnhs7iSBCRudVOgiHhY3omF80K83sT7K10LlH00hm2qR7z6');
+const stripePromise = loadStripe('pk_test_51JV3iNClfg6uxQbCR75YHk3B3Uu4suZrIRylg7zRbFL3cecXNC1vaLAorIhisWEnTJBJRQ1iyKnXI4bgDk9dJMc300xUDnkPxs');
 
 function App() {
   return (

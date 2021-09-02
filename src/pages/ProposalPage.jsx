@@ -1,15 +1,17 @@
 import { useState, useEffect, useContext } from "react";
 import { Redirect } from "react-router-dom";
-import { Skeleton } from "antd";
+import { Skeleton, Button } from "antd";
 import "firebase/firestore";
 import { getFirebaseInstance } from "../services/firebase/firebase";
 import { AuthContext } from "../components/AuthProvider";
-
+import {CardElement, useStripe, useElements} from '@stripe/react-stripe-js';
 
 function ProposalPage(props) {
   const firebase = getFirebaseInstance();
   const firestore = firebase.firestore();
   const auth = useContext(AuthContext);
+  const stripe = useStripe();
+  const elements = useElements();
 
   // set isLoading to true bcos when we want to load this page we need to have some time to load data
   const [proposalDoc, setProposalDoc] = useState(null);
@@ -34,6 +36,29 @@ function ProposalPage(props) {
         setIsLoading(false);
       });
   }, [firestore, auth.authUserID]);
+
+  // handle submit for stripe
+  const handlePayment = async (e) => {
+    e.preventDefault()
+
+    if (!stripe || !elements) {
+      return;
+    }
+    const cardElement = elements.getElement(CardElement);
+
+    // Use your card Element with other Stripe.js APIs frmo cardElement
+    const {error, paymentMethod} = await stripe.createPaymentMethod({
+      type: 'card',
+      card: cardElement,
+    });
+
+    if (error) {
+      console.log('[error]', error);
+    } else {
+      console.log('[PaymentMethod]', paymentMethod);
+    }
+  }
+
 
   if (isLoading) {
     return (<Skeleton active={ true } /> )
@@ -60,6 +85,14 @@ function ProposalPage(props) {
             )
           })}
         </ul>
+        <div>
+          <form>
+            <CardElement />
+            <Button type="primary" disabled={!stripe} onClick={handlePayment}>
+              Pay
+            </Button>
+          </form>
+        </div>
       </div>
     </div>
   )
