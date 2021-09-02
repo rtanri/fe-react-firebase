@@ -5,6 +5,7 @@ import "firebase/firestore";
 import { getFirebaseInstance } from "../services/firebase/firebase";
 import { AuthContext } from "../components/AuthProvider";
 
+
 function ProposalPage(props) {
   const firebase = getFirebaseInstance();
   const firestore = firebase.firestore();
